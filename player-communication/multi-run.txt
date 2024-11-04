@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Compile the project
+mvn clean package
+
+# Run Player1 in a separate process
+java -cp target/player-communication-1.0-SNAPSHOT.jar PlayerProcess Player1 5000 &
+P1_PID=$!
+
+# Run Player2 in a separate process
+java -cp target/player-communication-1.0-SNAPSHOT.jar PlayerProcess Player2 5001 &
+P2_PID=$!
+
+# Run the main process to initiate communication
+java -cp target/player-communication-1.0-SNAPSHOT.jar Main
+
+# Wait for player processes to finish
+wait $P1_PID
+wait $P2_PID
+
+echo "Communication complete. All processes have finished."
